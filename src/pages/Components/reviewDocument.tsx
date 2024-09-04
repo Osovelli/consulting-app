@@ -1,6 +1,30 @@
-import { useSelector } from "react-redux"
 import { PdfIcon, ImageIcon, ExcelIcon } from "./icons"
-import { RootState } from "../../store"
+
+interface Service {
+  id: string;
+  name: string;
+}
+
+interface Document {
+  id: string;
+  serviceId: string;
+  file: File;
+  uploadStatus: 'uploading' | 'completed' | 'failed';
+}
+
+interface ServiceInfo {
+  serviceId: string;
+  additionalInfo: string;
+}
+
+interface ReviewDocumentProps {
+  totalPrice: number;
+  selectedServices: string[];
+  uploadedDocuments: Document[];
+  serviceInfos: ServiceInfo[];
+  services: Service[];
+}
+
 
 export const getFileIcon = (fileName: string) => {
   const extension = fileName.split('.').pop()?.toLowerCase() || '';
@@ -19,9 +43,14 @@ export const getFileIcon = (fileName: string) => {
 };
 
 
-export const ReviewDocument = () => {
-  const { totalPrice, selectedServices, uploadedDocuments, serviceInfos } = useSelector((state: RootState) => state.progress)
-  const services = useSelector((state: RootState) => state.services.allServices);
+export const ReviewDocument = ({
+  totalPrice,
+  selectedServices,
+  uploadedDocuments,
+  serviceInfos,
+  services
+}: ReviewDocumentProps
+) => {
 
   return (
     <div className="font-hubot">

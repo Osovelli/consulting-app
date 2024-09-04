@@ -1,14 +1,10 @@
 //import { useState, useEffect } from "react";
 import { Checkbox } from "../../components/ui/checkbox";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { toggleService } from "../../store/progressSlice";
-import { setAllServices } from "../../store/serviceSlice";
 import { useEffect } from "react";
 
 export type Service = {
-  id: number;
+  id: string;
   name: string;
   desc: string;
   cost: number;
@@ -53,35 +49,39 @@ export const services: Service[] = [
   }
 ]
 
-export function SelectService() {
+type SelectServiceProps = {
+  selectedServices: string[];
+  onServiceSelect: (services: Service[]) => void;
+}
 
-  const dispatch = useDispatch();
-  const {  selectedServices, totalPrice, } = useSelector((state: RootState) => state.progress);
+export function SelectService({selectedServices=[], onServiceSelect}: SelectServiceProps) {
 
-  const handleServiceToggle = (checked: boolean, serviceId: number, serviceCost: number) => {
-    dispatch(toggleService({ id: serviceId, cost: serviceCost }));
+  const handleServiceToggle = (checked:boolean,  service: Service) => {
+    let updatedServices: Service[];
+    if (checked) {
+      updatedServices = [...selectedServices.map(id => services.find(s => s.id === id) as Service), service];
+    } else {
+      updatedServices = selectedServices.map(id => services.find(s => s.id === id) as Service).filter(s => s.id !== service.id);
+    }
+    onServiceSelect(updatedServices)
   };
-
-  useEffect(() => {
-    dispatch(setAllServices(services))
-  }, [services])
-
-  
 
     return (
       <div className="font-hubot space-y-4 bg-[#F6F8FA] px-8 pt-2 pb-16">
         <h2 className="text-2xl text-[#868C98] font-medium mb-4 text-center">Select Service(s)</h2>
         {/* Add your service selection form here */}
         <div className="flex flex-wrap gap-2">
-          {services.map((service, key) => {
+          {services.map((service) => {
             const {id, name, desc, cost} = service
-            const Key = key.toString()
+            console.log("id no: ", id)
+            const isSelected = selectedServices.includes(id);
+            //const Key = key.toString()
             return(
-            <div className="inline-flex max-w-2xl bg-white border rounded p-2 gap-2 items-start" id={Key}>
+            <div className="inline-flex max-w-2xl bg-white border rounded p-2 gap-2 items-start" id={id}>
               <Checkbox
-              id={`service-${service.id}`}
-              checked={selectedServices.includes(id)}
-              onCheckedChange={(checked) => handleServiceToggle(checked === true, id, cost)}
+              id={`service-${id}`}
+              checked={isSelected}
+              onCheckedChange={(checked) => handleServiceToggle(checked === true, service)}
               />
               <div className="flex flex-col gap-2">
               <div className="flex gap-2 items-start">

@@ -7,42 +7,149 @@ import { Link } from 'react-router-dom';
 import { ProgressFooter } from './Components/progressFooter';
 import { Step } from './Components/progressSteps';
 import UploadDocument from './Components/uploadDocument';
+import { Service, services } from './Components/service';
 //import { services } from './Components/service';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentStep, addCompletedStep, removeCompletedStep } from '../store/progressSlice';
-import { RootState } from '../store';
 import PaymentForm from './Components/payment';
 
+interface UploadedDocument {
+  id: string;
+  serviceId: string;
+  file: File;
+  uploadProgress: number;
+  uploadStatus: 'uploading' | 'completed' | 'failed';
+}
+
+interface ServiceInfo {
+  serviceId: string;
+  additionalInfo: string;
+}
+
+
+// Mock function to simulate API call
+  const saveSelectedServices = async (services: Service[]) => {
+  // In a real scenario, this would be an API call
+  console.log('Saving services to API:', services);
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+    return { success: true };
+  };
+
+
+
 export default function NewApplication() {
-    const dispatch = useDispatch();
-    const { currentStep, completedSteps, selectedServices, totalPrice} = useSelector((state: RootState) => state.progress)
+  const [currentStep, setCurrentStep] = useState<Step>(1);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [selectedServices, setSelectedServices] = useState<Service[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
+  const [uploadedDocuments, setUploadedDocuments] = useState<UploadedDocument[]>([]);
+  const [serviceInfos, setServiceInfos] = useState<ServiceInfo[]>([]);
 
     useEffect(() => {
       // You can perform any initial setup here if needed
   }, []);
 
-  const nextStep = () => {
+  {/*const nextStep = () => {
       dispatch(addCompletedStep(currentStep));
       dispatch(setCurrentStep(Math.min(currentStep + 1, 4) as Step));
-  };
+  };*/}
 
-  const previousStep = () => {
+  const nextStep = async () => {
+    if (currentStep === 1) {
+        setIsSaving(true);
+        try {
+            const result = await saveSelectedServices(selectedServices);
+            if (result.success) {
+                setCompletedSteps([...completedSteps, currentStep]);
+                setCurrentStep(Math.min(currentStep + 1, 4));
+            } else {
+                // Handle error
+                console.error('Failed to save services');
+            }
+        } catch (error) {
+            console.error('Error saving services:', error);
+        } finally {
+            setIsSaving(false);
+        }
+    } else {
+        setCompletedSteps([...completedSteps, currentStep]);
+        setCurrentStep(Math.min(currentStep + 1, 4));
+    }
+};
+
+const handleUpdateDocuments = (newDocuments: UploadedDocument[]) => {
+  setUploadedDocuments(prevDocs => {
+    const updatedDocs = [...prevDocs];
+    newDocuments.forEach(newDoc => {
+      const index = updatedDocs.findIndex(doc => doc.id === newDoc.id);
+      if (index !== -1) {
+        updatedDocs[index] = newDoc;
+      } else {
+        updatedDocs.push(newDoc);
+      }
+    });
+    return updatedDocs;
+  });
+};
+
+const handleUpdateAdditionalInfo = (serviceId: string, info: string) => {
+  setServiceInfos(prevInfos => {
+    const updatedInfos = [...prevInfos];
+    const index = updatedInfos.findIndex(i => i.serviceId === serviceId);
+    if (index !== -1) {
+      updatedInfos[index] = { ...updatedInfos[index], additionalInfo: info };
+    } else {
+      updatedInfos.push({ serviceId, additionalInfo: info });
+    }
+    return updatedInfos;
+  });
+};
+
+
+const previousStep = () => {
+  if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+      setCompletedSteps(completedSteps.filter(step => step !== currentStep - 1));
+  }
+};
+
+  {/*const previousStep = () => {
       if (currentStep > 1) {
           dispatch(setCurrentStep((currentStep - 1) as Step));
           dispatch(removeCompletedStep(currentStep - 1));
       }
   };
+*/}
+  const updateSelectedServices = (services: Service[]) => {
+    setSelectedServices(services);
+    const newTotalPrice = services.reduce((total, service) => total + service.cost, 0);
+    setTotalPrice(newTotalPrice);
+};
 
     const renderStepContent = () => {
         switch (currentStep) {
           case 1:
             return (
-              <SelectService />
+              <SelectService selectedServices={selectedServices.map(s => s.id)} onServiceSelect={updateSelectedServices}  />
             );
           case 2:
-            return <UploadDocument  />;
+            return <UploadDocument 
+            selectedServices={selectedServices.map(s => s.id)}
+            services={selectedServices}
+            onUpdateDocuments={(documents) => {
+              // Handle document updates
+            }}
+            onUpdateAdditionalInfo={(serviceId, info) => {
+              // Handle additional info updates
+            }}  />;
           case 3:
-            return <ReviewDocument  />;
+            return <ReviewDocument 
+                    totalPrice={totalPrice}
+                    selectedServices={selectedServices}
+                    uploadedDocuments={uploadedDocuments}
+                    serviceInfos={serviceInfos}
+                    services={services}  
+                    />;
           case 4:
             return <PaymentForm />;
           default:
@@ -52,7 +159,7 @@ export default function NewApplication() {
 
   return (
     <AppLayout>
-        <div className='py-4'>
+        <div className='py-10'>
             <div className='flex justify-between items-center'>
                 <div className='flex gap-2 items-center'>
                     <Link to={"/application"}
@@ -69,10 +176,15 @@ export default function NewApplication() {
             </div>
         </div>
         <div className="mx-auto">
-            <ProgressBar />
+            <ProgressBar currentStep={currentStep} completedSteps={completedSteps} />
             {renderStepContent()}
         </div>
-        <ProgressFooter />
+        <ProgressFooter 
+        currentStep={currentStep} 
+        selectedServices={selectedServices}
+        totalPrice={totalPrice}
+        onNext={nextStep}
+        onPrevious={previousStep} />
     </AppLayout>
   )
 }

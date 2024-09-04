@@ -1,31 +1,57 @@
-//import Header from "./Components/header_application";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import AppLayout from "./Components/appLayout";
 import { DataTable, } from "./Components/table";
 import ApplicationDetails from "./Components/application_detail";
-import { useDispatch } from 'react-redux';
-import { useSelector } from "react-redux";
-import { selectApplicationData } from "./Components/applicationData";
-import { resetApplication } from "../store/progressSlice";
 import Modal from "./Components/modal";
+import { ApplicationData, Data } from "./Components/mock/dashboard-data";
+
+const fetchApplicationData = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(ApplicationData);
+      }, 500); // Simulate network delay
+    });
+  };
 
 export default function Application() {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false)
-    //const [applicationData, setApplicationData] = useState<ServiceCol[]>([]);
+    const [applicationData, setApplicationData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false)
     const location = useLocation();
-    const applicationData = useSelector(selectApplicationData)
-    console.log(applicationData)
+
 
     const appStatus = ['submitted', 'processing', 'successful', 'declined']
+
+    useEffect(() => {
+        const loadData = async () => {
+            setIsLoading(true);
+            try {
+                const data = await fetchApplicationData();
+                setApplicationData(data);
+            } catch (error) {
+                console.error("Error fetching application data:", error);
+                // Handle error (e.g., show error message to user)
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadData();
+    }, []);
+
+    useEffect(() => {
+        if (location.state && location.state.openDetails) {
+            setIsDetailsOpen(true);
+            setSelectedApplication(location.state.applicationData);
+        }
+    }, [location]);
     
 
     console.log("applicationData: ", applicationData)
-
-    const dispatch = useDispatch();
 
     /*const handleNewApplication = () => {
         dispatch(createNewApplication());
@@ -34,7 +60,6 @@ export default function Application() {
     };*/
 
     const handleNewApplication = () => {
-        dispatch(resetApplication());
         // Any other logic needed for starting a new application
       };
 
@@ -51,9 +76,15 @@ export default function Application() {
         setIsDetailsOpen(true);
     };
 
+    const totalSubmitted = applicationData.length;
+    const inReview = applicationData.filter(app => app.status === 'processing').length;
+    const successful = applicationData.filter(app => app.status === 'successful').length;
+    const declined = applicationData.filter(app => app.status === 'declined').length;
+
     console.log(isDetailsOpen)
+
     return(
-        <AppLayout>
+        <AppLayout >
             {/*<Header />*/}
             <div className="relative">
                 <div className="mt-6 space-y-4">

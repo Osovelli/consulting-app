@@ -1,13 +1,15 @@
 import React from "react";
 //import { CheckIcon } from "lucide-react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator  } from "../../components/ui/breadcrumb";
 
 export type Step = 1 | 2 | 3 | 4;
 
-export function ProgressBar() {
+interface ProgressBarProps {
+  currentStep: Step;
+  completedSteps: number[];
+}
 
-  const { currentStep, completedSteps} = useSelector((state: RootState) => state.progress)
+export function ProgressBar({ currentStep, completedSteps }: ProgressBarProps) {
 
   const steps = [
     "Select Service(s)",
@@ -17,29 +19,39 @@ export function ProgressBar() {
   ];
   
   return (
-    <div className="flex flex-wrap justify-center items-center space-x-4 text-sm mb-8">
+    <Breadcrumb className="flex flex-wrap justify-center items-center space-x-2 md:space-x-4 text-xs md:text-sm mb-4 md:mb-8">
       {steps.map((step, index) => (
         <React.Fragment key={index}>
-          <div className={`flex items-center ${index + 1 === currentStep ? 'rounded-full px-3 py-1' : 'text-gray-500'}`}>
-            <span className={`mr-2 text-xs border py-[2px] rounded-full  ${index + 1 === currentStep ? 'font-semibold bg-[#C1FA6B] px-2' : completedSteps.includes(index + 1) ? 'text-green-800 ' : 'text-gray-500 px-2'}`}>
-            {completedSteps.includes(index + 1) ? (
-                <CheckIcon />
-              ) : (
-                <span className={index + 1 === currentStep ? 'font-semibold' : ''}>{index + 1}</span>
-              )}
-            </span>
-            <span className={`text-sm ${index + 1 === currentStep ? 'font-semibold': ""}`}>{step}</span>
-          </div>
+          <BreadcrumbItem className={`flex items-center ${index + 1 === currentStep ? 'rounded-full px-2 md:px-3 py-1' : 'text-gray-500'}`}>
+            <BreadcrumbLink href="#" className="flex items-center">
+                <span className={`mr-1 md:mr-2 text-xs border py-[2px] rounded-full ${
+                  index + 1 === currentStep
+                    ? 'font-semibold bg-[#C1FA6B] p-2 md:px-2'
+                    : completedSteps.includes(index + 1)
+                    ? 'text-green-800'
+                    : 'text-gray-500 px-1 md:px-2'
+                }`}>
+                  {completedSteps.includes(index + 1) ? (
+                    <CheckIcon />
+                  ) : (
+                    <span className={index + 1 === currentStep ? 'font-semibold' : ''}>{index + 1}</span>
+                  )}
+                </span>
+                <span className={`hidden sm:inline ${index + 1 === currentStep ? 'font-semibold' : ''}`}>{step}</span>
+                <span className={`sm:hidden ${index + 1 === currentStep ? 'font-semibold' : ''}`}>{step.split(' ')[0]}</span>
+              </BreadcrumbLink>
+          </BreadcrumbItem>
           {index < steps.length - 1 && (
-            <span className="text-gray-300">
-                <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4.29587 4.99932L0.583374 1.28682L1.64387 0.226318L6.41687 4.99932L1.64387 9.77232L0.583374 8.71182L4.29587 4.99932Z" fill="#868C98"/>
-                </svg>
-            </span>
+              <span className="text-gray-300">
+                  <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4.29587 4.99932L0.583374 1.28682L1.64387 0.226318L6.41687 4.99932L1.64387 9.77232L0.583374 8.71182L4.29587 4.99932Z" fill="#868C98"/>
+                  </svg>
+              </span>
+
           )}
         </React.Fragment>
       ))}
-    </div>
+    </Breadcrumb>
   );
 }
 

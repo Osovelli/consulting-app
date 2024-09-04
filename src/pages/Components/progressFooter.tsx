@@ -1,27 +1,24 @@
 import { Button } from "../../components/ui/button"
+import { Service } from "./service";
 import { Step } from "./progressSteps";
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from "../../store";
-import { addCompletedStep, setCurrentStep, removeCompletedStep } from "../../store/progressSlice";
 
-export const ProgressFooter = () => {
-  const dispatch = useDispatch();
-  const { currentStep, selectedServices, totalPrice,  } = useSelector((state: RootState) => state.progress);
 
-  const onNext = () => {
-    if (currentStep < 4) {
-      dispatch(setCurrentStep((currentStep + 1) as Step));
-      dispatch(addCompletedStep(currentStep))
-    }
-  };
+type ProgressFooterProps = {
+  currentStep: number;
+  selectedServices: Service[];
+  totalPrice: number;
+  onNext: () => void;
+  onPrevious: () => void;
+};
 
-  const onPrevious = () => {
-    if (currentStep > 1) {
-      dispatch(setCurrentStep((currentStep - 1) as Step));
-      dispatch(removeCompletedStep(currentStep - 1))
-    }
-  };
-
+export const ProgressFooter = ({
+  currentStep,
+  selectedServices,
+  totalPrice,
+  onNext,
+  onPrevious
+}: ProgressFooterProps) => {
+ 
   const numberOfSelectedService = selectedServices.length
   console.log('no of selected service: ', numberOfSelectedService)
 

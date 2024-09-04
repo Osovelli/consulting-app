@@ -40,11 +40,11 @@ const pageSizeOptions = [5, 10, 20, 30, 50, 100];
 
 export type ServiceCol = {
     id: string
-    services: Array<string>
+    services: string[]
     documents: number
     date: string
     status: Status
-    //action: string || "view",
+    action: string
   }
   
   /*const StaticData: ServiceCol[] = [
@@ -264,7 +264,7 @@ export type ServiceCol = {
     )
   };
 
-  export function DataTable({ onRowClick, applicationData = [], tableStatus, showDocumentsColumn = true }: { onRowClick: (row: any) => void, applicationData, tableStatus: Array<string>, showDocumentsColumn?: boolean}) {
+  export function DataTable({ onRowClick, applicationData, tableStatus, showDocumentsColumn = true }: { onRowClick: (row: any) => void, applicationData, tableStatus: Array<string>, showDocumentsColumn?: boolean}) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [globalFilter, setGlobalFilter] = useState('')
@@ -321,7 +321,7 @@ export type ServiceCol = {
           const StatusIcon = StatusIcons[status];
           return (
             <div className={clsx(
-              "inline-flex items-center gap-2 px-2 py-1 border border-[#E2E4E9] text-xs font-medium capitalize",
+              "inline-flex items-center gap-2 px-2 py-1 rounded-md border border-[#E2E4E9] text-xs font-medium capitalize",
               //status === "submitted" && "bg-yellow-100 text-yellow-800",
               //status === "processing" && "bg-blue-100 text-blue-800",
               //status === "successful" && "bg-green-100 text-green-800",
@@ -343,7 +343,7 @@ export type ServiceCol = {
               "inline-flex items-center gap-2 py-1 text-xs font-medium capitalize",
             )}>
               <EyeIcon />
-              <span>view</span>
+                <span>{action}</span>
             </div>
           );
         },

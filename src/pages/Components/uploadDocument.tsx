@@ -1,7 +1,4 @@
 //import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store';
-import { uploadDocument, updateServiceInfo, updateUploadProgress, updateUploadStatus, removeDocument } from '../../store/progressSlice';
 import { Progress } from '../../components/ui/progress';
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,90 +6,98 @@ import { simulateFileUpload } from '../../api/simulateupload';
 //import { PdfIcon } from './icons';
 import { getFileIcon } from './reviewDocument';
 
-interface UploadFormProps {
-  serviceName: string;
-  serviceId: number;
+interface Document {
+  id: string;
+  serviceId: string;
+  file: File;
+  additionalInfo: string;
+  uploadProgress: number;
+  uploadStatus: 'uploading' | 'completed' | 'failed';
 }
 
-const UploadForm: React.FC<UploadFormProps> = ({serviceId, serviceName }) => {
-  const dispatch = useDispatch();
+interface UploadedDocument {
+  id: string;
+  serviceId: string;
+  file: File;
+  uploadProgress: number;
+  uploadStatus: 'uploading' | 'completed' | 'failed';
+  additionalInfo: string;
+}
 
-  const uploadedDocuments = useSelector((state: RootState) => 
-    state.progress.uploadedDocuments.filter(doc => doc.serviceId === serviceId)
-  );
+interface ServiceInfo {
+  serviceId: string;
+  additionalInfo: string;
+}
 
-  const serviceInfo = useSelector((state: RootState) =>
-    state.progress.serviceInfos.find(info => info.serviceId === serviceId)
-  );
+/*interface UploadFormProps {
+  serviceName: string;
+  serviceId: string;
+  documents: Document[];
+  serviceInfo: ServiceInfo;
+  onUploadDocument: (document: Document) => void;
+  onUpdateDocument: (document: Document) => void;
+  onRemoveDocument: (documentId: string) => void;
+  onUpdateServiceInfo: (serviceId: string, info: string) => void;
+}*/
 
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const [uploadStatus, setUploadStatus] = useState<'uploading' | 'completed' | 'failed'>()
+interface UploadFormProps {
+  serviceName: string;
+  serviceId: string;
+  onUpdateDocuments: (documents: UploadedDocument[]) => void;
+  onUpdateAdditionalInfo: (serviceId: string, info: string) => void;
+}
+
+
+const UploadForm = ({
+  serviceId,
+  serviceName,
+  onUpdateDocuments,
+  onUpdateAdditionalInfo}: UploadFormProps) => {
+
+  const [uploadedDocuments, setUploadedDocuments] = useState<UploadedDocument[]>([]);
+  const [additionalInfo, setAdditionalInfo] = useState('');
 
   useEffect(() => {
-    console.log("Component updated. Upload progress:", uploadProgress, "Status:", uploadStatus);
-  }, [uploadProgress, uploadStatus]);
-
-  {/*const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const file = event.target.files[0];
-      console.log("File selected:", file.name);
-      setUploadStatus('uploading')
-      Array.from(event.target.files).forEach(async (file) => {
-        const documentId = uuidv4();
-        dispatch(uploadDocument({ 
-          id: documentId,
-          serviceId, 
-          file, 
-          additionalInfo: ""
-        }));
-        console.log("uploadDocument dispatched");
-
-        try {
-          await simulateFileUpload(file, (progress) => {
-            console.log("Upload progress:", progress);
-            dispatch(updateUploadProgress({id: documentId, progress }));
-            setUploadProgress(progress);
-          });
-          console.log("Upload completed");
-          dispatch(updateUploadStatus({ id: documentId, status: 'completed' }));
-          setUploadStatus('completed');
-        } catch (error) {
-          console.error("Upload failed:", error);
-          dispatch(updateUploadStatus({ id: documentId, status: 'failed' }));
-          setUploadStatus('failed');
-        }
-      })
-
-    }
-  };*/}
+    onUpdateDocuments(uploadedDocuments);
+  }, [uploadedDocuments, onUpdateDocuments]);
 
   const handleFileUpload = async (file: File) => {
-    const allowedExtensions = ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'png', 'jpeg' ];
-
+    const allowedExtensions = ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'png', 'jpeg'];
     const documentId = uuidv4();
-    dispatch(uploadDocument({
+    const newDocument: Document = {
       id: documentId,
       serviceId,
       file,
       additionalInfo: '',
-    }));
-    console.log("File size: ", file.size/1000, 'kb')
-    const fileExt = file.name.split('.').pop()?.toLocaleLowerCase() || ''
+      uploadProgress: 0,
+      uploadStatus: 'uploading'
+    };
+
+    setUploadedDocuments(prev => [...prev, newDocument]);
+
+    const fileExt = file.name.split('.').pop()?.toLowerCase() || '';
     
     if (!allowedExtensions.includes(fileExt)) {
-      dispatch(updateUploadStatus({ id: documentId, status: 'failed' }))
-    }
-    else {
+      setUploadedDocuments(prev => 
+        prev.map(doc => doc.id === documentId ? {...doc, uploadStatus: 'failed'} : doc)
+      );
+    } else {
       try {
         await simulateFileUpload(file, (progress) => {
-          dispatch(updateUploadProgress({ id: documentId, progress }));
+          setUploadedDocuments(prev => 
+            prev.map(doc => doc.id === documentId ? {...doc, uploadProgress: progress} : doc)
+          );
         });
-        dispatch(updateUploadStatus({ id: documentId, status: 'completed' }));
+        setUploadedDocuments(prev => 
+          prev.map(doc => doc.id === documentId ? {...doc, uploadStatus: 'completed'} : doc)
+        );
       } catch (error) {
-        dispatch(updateUploadStatus({ id: documentId, status: 'failed' }));
+        setUploadedDocuments(prev => 
+          prev.map(doc => doc.id === documentId ? {...doc, uploadStatus: 'failed'} : doc)
+        );
       }
-    };
-  } 
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -100,10 +105,11 @@ const UploadForm: React.FC<UploadFormProps> = ({serviceId, serviceName }) => {
     }
   };
 
-  const handleRetry = () => {
-    setUploadStatus('uploading');
-    setUploadProgress(0);
-    handleFileChange(event);
+  const handleRetry = (docId: string) => {
+    const docToRetry = uploadedDocuments.find(doc => doc.id === docId);
+    if (docToRetry) {
+      handleFileUpload(docToRetry.file);
+    }
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -112,32 +118,18 @@ const UploadForm: React.FC<UploadFormProps> = ({serviceId, serviceName }) => {
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    /*if (event.dataTransfer.files && event.dataTransfer.files[0]) {
-      dispatch(uploadDocument({
-        id, 
-        serviceId, 
-        file: event.dataTransfer.files[0], 
-        additionalInfo: uploadedDocument?.additionalInfo || '' 
-      }));
-    }*/
     if (event.dataTransfer.files) {
-      Array.from(event.dataTransfer.files).forEach(file => {
-        handleFileUpload(file);
-      });
+      Array.from(event.dataTransfer.files).forEach(handleFileUpload);
     }
   };
 
-  {/*const handleAdditionalInfoChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch(updateAdditionalInfo({id, serviceId, info: event.target.value }));
-  };*/}
-
   const handleAdditionalInfoChange = (info: string) => {
-    dispatch(updateServiceInfo({ serviceId, additionalInfo: info }));
+    setAdditionalInfo(info);
+    onUpdateAdditionalInfo(serviceId, info);
   };
 
   const handleRemoveDocument = (docId: string) => {
-    console.log('Removing document:', docId);
-    dispatch(removeDocument({id: docId}));
+    setUploadedDocuments(prev => prev.filter(doc => doc.id !== docId));
   };
 
   return (
@@ -146,8 +138,8 @@ const UploadForm: React.FC<UploadFormProps> = ({serviceId, serviceName }) => {
         <h3 className="text-lg font-semibold">{serviceName}</h3>
         <button className="text-red-500">&times;</button>
       </div>
-      {!uploadStatus &&
-      <div 
+      {uploadedDocuments.length === 0 &&
+      (<div 
         className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center"
         onDragOver={handleDragOver}
         onDrop={handleDrop}
@@ -163,7 +155,7 @@ const UploadForm: React.FC<UploadFormProps> = ({serviceId, serviceName }) => {
           Browse File(s)
           <input type="file" className="hidden" onChange={handleFileChange} accept=".jpeg,.jpg,.png,.pdf,.docx,.doc,.txt,.xlsx,.mp4" />
         </label>
-      </div>
+      </div>)
       }
       <div className="mt-4">
         {uploadedDocuments.map((doc) => (
@@ -225,7 +217,7 @@ const UploadForm: React.FC<UploadFormProps> = ({serviceId, serviceName }) => {
                       </svg>
                     </button>
                   </div>
-                  <span  className='underline text-red-500 hover:cursor-pointer' onClick={handleRetry}>Try Again</span>
+                  <span  className='underline text-red-500 hover:cursor-pointer' onClick={()=>handleRetry(doc.id)}>Try Again</span>
                 </div>
               </div>
             )}
@@ -238,19 +230,29 @@ const UploadForm: React.FC<UploadFormProps> = ({serviceId, serviceName }) => {
           className="w-full border rounded-lg p-2"
           placeholder="Kindly input additional information if any"
           rows={3}
-          value={serviceInfo?.additionalInfo || ''}
+          value={additionalInfo || ''}
           onChange={(e) => handleAdditionalInfoChange(e.target.value)}
         ></textarea>
-        <p className="text-right text-sm text-gray-500">{(serviceInfo?.additionalInfo.length || 0)}/200</p>
+        <p className="text-right text-sm text-gray-500">{(additionalInfo.length || 0)}/200</p>
       </div>
     </div>
   );
 };
 
+interface UploadDocumentProps {
+  selectedServices: string[];
+  services: { id: string; name: string }[];
+  onUpdateDocuments: (documents: UploadedDocument[]) => void;
+  onUpdateAdditionalInfo: (serviceId: string, info: string) => void;
+}
+
 // UploadDocument component that uses UploadForm for each selected service
-const UploadDocument: React.FC = () => {
-  const { selectedServices } = useSelector((state: RootState) => state.progress);
-  const services = useSelector((state: RootState) => state.services.allServices);
+const UploadDocument = ({
+  selectedServices=[],
+  services,
+  onUpdateDocuments,
+  onUpdateAdditionalInfo
+}: UploadDocumentProps) => {
 
   /*const handleFileUpload = (serviceId: number, file: File) => {
     console.log(`File uploaded for ${serviceId}:`, file.name);
@@ -264,10 +266,12 @@ const UploadDocument: React.FC = () => {
         const service = services.find(s => s.id === serviceId);
         if (!service) return null; // Skip if service not found
         return (
-          <UploadForm 
+          <UploadForm
             key={serviceId} 
             serviceId={serviceId}
-            serviceName={service.name} 
+            serviceName={service.name}
+            onUpdateDocuments={onUpdateDocuments}
+            onUpdateAdditionalInfo={onUpdateAdditionalInfo}
           />
         );
       })}

@@ -11,11 +11,12 @@ import Homepage from './pages/homepage';
 import Application from "./pages/application"
 import NewApplication from './pages/newApplication';
 import Appointment from './pages/appointment';
-//import { Settings } from 'lucide-react';
-import ContactForm from './pages/contact_form';
+import AccountSettings from './pages/account_settings';
+import ContactForm from './pages/Components/contact_form';
 import Blog from './pages/blog';
 import BlogPost from './pages/blogpost';
 import BlogGrid from './pages/Components/blog_grid';
+import AdminApplications from './pages/Admin_application';
 
 const BlogPostWrapper = () => {
     const { id } = useParams();
@@ -89,10 +90,12 @@ function App() {
                 <Route path='/application/create' element={<NewApplication/>} />
                 <Route path='/appointment' element={<Appointment />}/>
                 <Route path='/contact' element={<ContactForm />}/>
+                <Route path='/admin' element={<AdminApplications />}/>
                 <Route>
                     <Route path="/blog" element={<Blog posts={blogPosts} />} />
                     <Route path="/blog/:id" element={<BlogPost posts={blogPosts} />} />
                 </Route>
+                <Route path='/settings' element={<AccountSettings />}></Route>
             </Routes>
         </BrowserRouter>
     )

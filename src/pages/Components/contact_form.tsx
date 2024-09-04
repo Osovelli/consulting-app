@@ -1,11 +1,14 @@
-import { Button } from "../components/ui/button"
+import { Button } from "../../components/ui/button"
 
 
-function ContactForm() {
+function ContactForm({ isOpen, onClose}) {
+    if (!isOpen) return null;
+
   return (
-    <div className="py-6 px-4 h-full">
-        <div className="flex h-full md:flex-row flex-col">
-            <div className="bg-[url('contact-image.png')] flex items-end min-h-screen md:w-2/5 rounded-lg">
+    <div className="absolute inset-0 bg-black bg-opacity-50">
+        <div className="py-6 px-4 rounded-lg bg-white w-2/3 mx-auto my-4 h-auto">
+        <div className="h-full flex md:flex-row flex-col">
+            <div className="bg-[url('contact-image.png')] min-h-2/3 flex items-end md:w-2/5 rounded-lg">
                 <div className="bg-[#fcfcfb3e] border-[#CDD1D566] bg-cover inset-x-0 bottom-0 mx-2 mb-3 rounded-lg p-3">
                     <div className="space-y-3">
                         <h3 className="text-lg text-white">You can reach us at:</h3>
@@ -92,6 +95,7 @@ function ContactForm() {
                 </div>
             </div>
         </div>
+    </div>
     </div>
   )
 }

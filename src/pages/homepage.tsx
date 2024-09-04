@@ -6,9 +6,11 @@ import Header from "./Components/header2"
 import Footer from "./Components/home-footer"
 import ServiceModal from "./Components/service_modal"
 import AppointmentBookingModal from "./Components/appointment_booking"
+import ContactForm from "./Components/contact_form"
 
 export default function Homepage() {
     const [modalOpen, setModalOpen] = useState(false);
+    const [contactModalOpen, setContactModalOpen] = useState(false)
     const [selectedService, setSelectedService] = useState(null);
     const [appointmentModalOpen, setAppointmentModalOpen] = useState(false);
 
@@ -41,11 +43,17 @@ export default function Homepage() {
         setModalOpen(true);
     };
 
-    const openAppointmentModal = () => {
+    const openContactModal = () => {
         setModalOpen(false);
+        setContactModalOpen(true)
+    };
+
+    const openAppointmentModal = () => {
+        setModalOpen(!modalOpen);
         setAppointmentModalOpen(true);
     };
 
+    console.log(contactModalOpen)
     return(
         <div className="relative w-full px-2 md:px-20 gap-2">
             <Header />
@@ -74,7 +82,7 @@ export default function Homepage() {
                             </svg>
                             <span>Schedule Appointment</span>
                         </button>
-                        <button className="px-3 py-2 md:gap-2 flex items-center bg-white text-[#03713A] rounded-lg leading-4">
+                        <button onClick={openContactModal} className="px-3 py-2 md:gap-2 flex items-center bg-white text-[#03713A] rounded-lg leading-4">
                             Contact us
                         </button>
                     </div>
@@ -360,7 +368,7 @@ export default function Homepage() {
                                         </svg>
                                         <span>Schedule Appointment</span>
                                     </button>
-                                    <button className="px-3 h-12 py-1 md:gap-2 text-xs md:text-base flex items-center bg-white text-[#03713A] rounded-lg leading-4">
+                                    <button onClick={openContactModal} className="px-3 h-12 py-1 md:gap-2 text-xs md:text-base flex items-center bg-white text-[#03713A] rounded-lg leading-4">
                                         Contact us
                                     </button>
                                 </div>
@@ -380,6 +388,10 @@ export default function Homepage() {
             <AppointmentBookingModal 
                 isOpen={appointmentModalOpen}
                 onClose={() => setAppointmentModalOpen(false)}
+            />
+            <ContactForm 
+                isOpen={contactModalOpen}
+                onClose={() => setModalOpen(false)}
             />
         </div>
         

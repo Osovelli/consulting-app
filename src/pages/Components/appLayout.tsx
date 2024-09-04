@@ -5,7 +5,7 @@ const AppLayout = ({ children }: {
     children: React.ReactNode
 }) => {
   return (
-    <div className='px-6 bg-[#F6F8FA]'>
+    <div className='relative px-6 bg-[#F6F8FA]'>
       <Header />
         {children}
     </div>
