@@ -47,7 +47,60 @@ export const Data = [
       serviceType: ["Financial analysis", "Business formation"],
       status: "Pending",
       submissionDate: "July 15, 2023",
-    }
+    },
+    {
+      applicationId: "#1234567890",
+      clientName: "Quantum Sphere",
+      serviceType: ["Financial analysis", "Business formation"],
+      submissionDate: "July 15, 2023",
+      time: "11:00 AM",
+      status: "Upcoming",
+      
+    },
+    {
+      applicationId: "#1234567890",
+      clientName: "Orbit Sphere",
+      serviceType: ["Financial analysis", "Business formation"],
+      submissionDate: "July 15, 2023",
+      time: "11:00 AM",
+      status: "Upcoming",
+      
+    },
+    {
+      applicationId: "#1234567890",
+      clientName: "Quantum Streamline",
+      serviceType: ["Financial analysis", "Business formation"],
+      submissionDate: "July 15, 2023",
+      time: "11:00 AM",
+      status: "Upcoming",
+      
+    },
+    {
+      applicationId: "#1234567890",
+      clientName: "Wave Meta",
+      serviceType: ["Financial analysis", "Business formation"],
+      submissionDate: "July 15, 2023",
+      time: "11:00 AM",
+      status: "Upcoming",
+      
+    },
+    {
+      applicationId: "#1234567890",
+      clientName: "Quantum Vision",
+      serviceType: ["Financial analysis", "Business formation"],
+      submissionDate: "July 15, 2023",
+      time: "11:00 AM",
+      status: "Upcoming",
+      
+    },
+    {
+      applicationId: "#1234567890",
+      clientName: "Streamline Fusion",
+      serviceType: ["Financial analysis", "Business formation"],
+      submissionDate: "July 15, 2023",
+      time: "11:00 AM",
+      status: "Cancelled",
+    } 
   ];
   
 

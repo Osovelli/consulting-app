@@ -1,8 +1,22 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { DataTable } from '../Table/data-table'
-import { ColumnDef } from '@tanstack/react-table'
+//import { ColumnDef } from '@tanstack/react-table'
 import { Button } from '../../../components/ui/button'
 import { Data } from '../mock/dashboard-data'
+import { Filter, ChevronDown } from 'lucide-react'
+
+import { 
+  ColumnDef, 
+  useReactTable, 
+  getCoreRowModel, 
+  getFilteredRowModel, 
+  getPaginationRowModel, 
+  getSortedRowModel,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  FilterFn,
+} from '@tanstack/react-table'
 
 // This type should match your data structure
 type Application = {
@@ -10,6 +24,7 @@ type Application = {
   clientName: string
   serviceType: string[]
   status: string
+  time?: string
   submissionDate: string
 }
 
@@ -33,6 +48,11 @@ const columns: ColumnDef<Application>[] = [
     header: "Status",
   },
   {
+    accessorKey: "time",
+    header: "Time",
+    cell: ({ row }) => row.original.time || 'N/A',
+  },
+  {
     accessorKey: "submissionDate",
     header: "Submission Date",
   },
@@ -51,6 +71,12 @@ const columns: ColumnDef<Application>[] = [
 
 export const AdminDashboard = () => {
   const [data, setData] = useState<Application[]>(Data)
+  const [activeTab, setActiveTab] = useState('pending')
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = useState({})
+  //const [globalFilter, setGlobalFilter] = useState('')
 
   useEffect(() => {
     // Fetch your data here
@@ -62,8 +88,69 @@ export const AdminDashboard = () => {
     fetchData()
   }, [])
 
+  const filterByTabAndTime: FilterFn<Application> = (row, columnId, filterValue) => {
+    if (filterValue === 'upcoming') {
+      const status = row.getValue('status') as string;
+      const time = row.getValue('time') as string | undefined;
+      return status.toLowerCase() === 'upcoming' && !!time && time.trim() !== '';
+    } else if (filterValue === 'pending') {
+      const status = row.getValue('status') as string;
+      return status.toLowerCase() === 'pending';
+    }
+    return true;
+  };
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+    enableRowSelection: true,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    //onGlobalFilterChange: setGlobalFilter,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    filterFns: {
+      filterByTabAndTime
+    },
+    //globalFilterFn: hasTimeValue,
+  })
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab)
+    
+    const statusColumn = table.getColumn('status')
+    const timeColumn = table.getColumn('time')
+    
+    if (statusColumn && timeColumn) {
+      timeColumn.toggleVisibility(tab === 'upcoming')
+      statusColumn.setFilterValue(tab)
+    }
+  
+    table.setPageIndex(0)
+  }
+
+  useEffect(() => {
+    // Initially hide the Time column
+    const timeColumn = table.getColumn('time')
+    const statusColumn = table.getColumn('status')
+    if (timeColumn && statusColumn) {
+      timeColumn.toggleVisibility(false)
+      statusColumn.setFilterValue('pending')
+    }
+  }, [table])
+
   return (
-    <div className='w-auto p-4 font-hubot space-y-4'>
+    <div className='w-auto p-4 font-hubot space-y-6 '>
       <header>
         <h2 className='text-lg font-medium'>Dashboard</h2>
         <p className='text-sm font-normal'>Insert section description here.</p>
@@ -114,7 +201,51 @@ export const AdminDashboard = () => {
             </div>
         </div>
       </div>
-      <DataTable columns={columns} data={data} />
+      <div className='space-y-8 pt-4'>
+        {/* Tabs */}
+        <div className='flex justify-between '>
+        <div className="flex gap-2 bg-[#F6F8FA] border">
+          <Button
+            className='border-0'
+            variant={activeTab === 'pending' ? 'default' : 'outline'}
+            onClick={() => handleTabChange('pending')}
+          >
+            Pending application
+          </Button>
+          <Button
+            className='border-0'
+            variant={activeTab === 'upcoming' ? 'default' : 'outline'}
+            onClick={() => handleTabChange('upcoming')}
+          >
+            Upcoming appointments
+          </Button>
+        </div>
+        
+        {/* Filter and Sort Controls */}
+        <div className="flex gap-3 justify-between items-center">
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2"
+            onClick={() => {() => table.getColumn('status')?.setFilterValue('')}}
+          >
+            <Filter size={16} />
+            Filter
+          </Button>
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2"
+            onClick={() => table.getColumn('submissionDate')?.toggleSorting()}
+          >
+            Sort by
+            <ChevronDown size={16} />
+          </Button>
+        </div>
+        </div>
+        <DataTable 
+        table={table}
+        columns={columns}
+        />
+      </div>
     </div>
   )
 }

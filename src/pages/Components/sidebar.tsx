@@ -37,7 +37,7 @@ const Sidebar = ({onItemClick}) => {
       >
         <Menu className="w-6 h-6" />
       </button>*/}
-      <div className={`fixed md:static inset-y-0 left-0 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 transition duration-200 ease-in-out md:w-64 bg-white h-auto shadow-lg z-10`}>
+      <div className={`fixed md:static inset-y-0 left-0 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 transition duration-200 ease-in-out md:w-64 bg-white min-h-dvh shadow-lg z-10`}>
         <div className="p-4 border-b">
           <img src="/logo-image.png" alt="D&E Business Consulting" className="mb-2 hidden md:block w-18 h-8" />
         </div>

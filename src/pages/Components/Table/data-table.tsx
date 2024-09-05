@@ -3,6 +3,7 @@ import clsx from 'clsx'
 
 import {
   ColumnDef,
+  Table as TableDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -24,12 +25,12 @@ import {
     TableRow,
  } from '../../../components/ui/table'
 
-import {
+{/*import {
      DropdownMenu,
      DropdownMenuCheckboxItem,
      DropdownMenuContent,
      DropdownMenuTrigger, 
-} from '../../../components/ui/dropdown-menu'
+} from '../../../components/ui/dropdown-menu'*/}
 
 import { 
     Pagination,
@@ -39,7 +40,7 @@ import {
 } from '../../../components/ui/pagination'
 
 import { Button } from '../../../components/ui/button'
-import { Input } from '../../../components/ui/input'
+//import { Input } from '../../../components/ui/input'
 
 const pageSizeOptions = [5, 10, 20, 30, 50, 100];
 
@@ -115,21 +116,21 @@ const RowsPerPageDropdown = ({ table, pageSizeOptions }) => {
     );
   };
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps<TData> {
+  table: TableDef<TData>,
+  columns: ColumnDef<TData, any>[]
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+export function DataTable<TData>({
+  table,
+  columns
+}: DataTableProps<TData>,) {
+  {/*const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [rowSelection, setRowSelection] = React.useState({})*/}
 
-  const table = useReactTable({
+  {/*const table = useReactTable({
     data,
     columns,
     onSortingChange: setSorting,
@@ -146,11 +147,11 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
     },
-  })
+  })*/}
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      {/*<div className="flex items-center py-4">
         <Input
           placeholder="Filter clients..."
           value={(table.getColumn("clientName")?.getFilterValue() as string) ?? ""}
@@ -183,7 +184,7 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </div>*/}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
