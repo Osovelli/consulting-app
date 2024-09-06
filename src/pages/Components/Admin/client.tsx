@@ -5,6 +5,8 @@ import { Button } from '../../../components/ui/button'
 import { Data } from '../mock/dashboard-data'
 import { SearchIcon, FilterIcon, SortDesc, ArrowDown } from '../icons'
 import { Input } from '../../../components/ui/input'
+import CreateClientComponent from './create-client'
+//import CreateNewClientMenu from './create-new-client'
 
 import { 
   ColumnDef, 
@@ -18,6 +20,7 @@ import {
   VisibilityState,
   FilterFn,
 } from '@tanstack/react-table'
+import { PlusIcon } from 'lucide-react'
 
 // This type should match your data structure
 type Application = {
@@ -33,47 +36,8 @@ type Status = 'all' | 'pending' | 'active' | 'inactive';
 
 const clientStatus = ['all', 'pending', 'active', 'inactive']
 
-const columns: ColumnDef<Application>[] = [
-  {
-    accessorKey: "applicationId",
-    header: "ID",
-  },
-  {
-    accessorKey: "clientName",
-    header: "Client Name",
-  },
-  {
-    accessorKey: "serviceType",
-    header: "Service Type",
-    cell: ({ row }) => row.original.serviceType.join(', '),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
-  {
-    accessorKey: "time",
-    header: "Time",
-    cell: ({ row }) => row.original.time || 'N/A',
-  },
-  {
-    accessorKey: "submissionDate",
-    header: "Submission Date",
-  },
-  {
-    header: "actions",
-    id: "actions",
-    cell: ({ row }) => {
-      return (
-        <Button variant="ghost" onClick={() => console.log(row.original)}>
-          View
-        </Button>
-      )
-    },
-  },
-]
 
-export const AdminClient = () => {
+export const AdminClient = ({ modalOpen, setModalOpen }) => {
   const [data, setData] = useState<Application[]>(Data)
   const [activeTab, setActiveTab] = useState('All')
   const [sorting, setSorting] = useState<SortingState>([])
@@ -81,6 +45,49 @@ export const AdminClient = () => {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState('')
+  const [selectedClient, setSelectedClient] = useState(null);
+
+  const columns: ColumnDef<Application>[] = [
+    {
+      accessorKey: "applicationId",
+      header: "ID",
+    },
+    {
+      accessorKey: "clientName",
+      header: "Client Name",
+    },
+    {
+      accessorKey: "serviceType",
+      header: "Service Type",
+      cell: ({ row }) => row.original.serviceType.join(', '),
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+    },
+    {
+      accessorKey: "time",
+      header: "Time",
+      cell: ({ row }) => row.original.time || 'N/A',
+    },
+    {
+      accessorKey: "submissionDate",
+      header: "Submission Date",
+    },
+    {
+      header: "actions",
+      id: "actions",
+      cell: ({ row }) => {
+        return (
+          <Button variant="ghost" onClick={() => setSelectedClient(row.original)}>
+            View
+          </Button>
+        )
+      },
+    },
+  ]
+  
+  console.log("Selected client: ", selectedClient)
 
   useEffect(() => {
     // Fetch your data here
@@ -147,11 +154,19 @@ export const AdminClient = () => {
     }
   }, [table])
 
-  return (
-    <div className='w-auto p-4 font-hubot space-y-6 '>
-      <header>
-        <h2 className='text-lg font-medium'>Client</h2>
-        <p className='text-sm font-normal'>View, edit, and manage all your client information in one place..</p>
+    return(
+      <>{
+        selectedClient === null ? (
+      <div className='w-auto p-4 font-hubot space-y-6'>
+      <header className='flex justify-between'>
+        <div>
+          <h2 className='text-lg font-medium'>Client</h2>
+          <p className='text-sm font-normal'>View, edit, and manage all your client information in one place..</p>
+        </div>
+        <Button className='rounded-xl bg-[#C1FA6B] text-black gap-2' onClick={()=> setModalOpen(true)}>
+          <PlusIcon width={12} height={12} />
+          Create Client
+          </Button>
       </header>
       <div className='space-y-8 pt-4'>
         {/* Tabs */}
@@ -174,24 +189,6 @@ export const AdminClient = () => {
           </div>
         
         {/* Filter and Sort Controls */}
-        {/*<div className="flex gap-3 justify-between items-center">
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
-            onClick={() => {() => table.getColumn('status')?.setFilterValue('')}}
-          >
-            <Filter size={16} />
-            Filter
-          </Button>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
-            onClick={() => table.getColumn('submissionDate')?.toggleSorting()}
-          >
-            Sort by
-            <ChevronDown size={16} />
-          </Button>
-        </div>*/}
         <div className="flex gap-1">
                 <div className="relative max-w-sm">
                     <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -228,6 +225,13 @@ export const AdminClient = () => {
         columns={columns}
         />
       </div>
-    </div>
-  )
-}
+    </div>) : (
+      <CreateClientComponent 
+      client={selectedClient} 
+      onClose={() => setSelectedClient(null)}
+      />
+    )
+    }
+    </>
+    )
+  }

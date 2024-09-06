@@ -233,7 +233,7 @@ export function DataTable<TData>({
           </TableBody>
         </Table>
       </div>
-      {table.getRowModel().rows.length > 0 ? <Pagination className="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
+      {table.getRowModel().rows.length > 0 ? <Pagination className="flex items-center justify-between my-6 px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
             <PaginationContent className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
               <PaginationItem>
                 <p className="text-sm text-gray-700">

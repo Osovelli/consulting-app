@@ -163,3 +163,33 @@ export const Data = [
     }
   ];
   
+  export const appointmentTableData = [
+    {
+      appointmentId: "#1234567890",
+      companyName: "Tesla Inc",
+      serviceType: ["Financial analysis", "Business formation"],
+      date: "July 15, 2023",
+      time: "11:00 AM",
+      status: "Upcoming",
+       
+    },
+    {
+      appointmentId: "#1234567890",
+      companyName: "Quantum Sphere",
+      serviceType: ["Financial analysis", "Business formation"],
+      date: "July 15, 2023",
+      time: "11:00 AM",
+      status: "Upcoming",
+       
+    },
+    {
+      appointmentId: "#1234567890",
+      companyName: "Orbit Sphere",
+      serviceType: ["Financial analysis", "Business formation"],
+      date: "July 15, 2023",
+      time: "11:00 AM",
+      status: "Upcoming",
+       
+    }
+  ];
+  
