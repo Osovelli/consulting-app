@@ -1,10 +1,10 @@
 import clsx from 'clsx'
 import { useEffect, useState, useMemo } from 'react'
-import { DataTable } from '../Table/data-table'
-import { Button } from '../../../components/ui/button'
-import { Data } from '../mock/dashboard-data'
-import { SearchIcon, FilterIcon, SortDesc, ArrowDown } from '../icons'
-import { Input } from '../../../components/ui/input'
+import { DataTable } from '../../Table/data-table'
+import { Button } from '../../../../components/ui/button'
+import { Data } from '../../mock/dashboard-data'
+import { SearchIcon, FilterIcon, SortDesc, ArrowDown } from '../../icons'
+import { Input } from '../../../../components/ui/input'
 import CreateClientComponent from './create-client'
 //import CreateNewClientMenu from './create-new-client'
 
@@ -166,7 +166,7 @@ export const AdminClient = ({ modalOpen, setModalOpen }) => {
         <Button className='rounded-xl bg-[#C1FA6B] text-black gap-2' onClick={()=> setModalOpen(true)}>
           <PlusIcon width={12} height={12} />
           Create Client
-          </Button>
+        </Button>
       </header>
       <div className='space-y-8 pt-4'>
         {/* Tabs */}

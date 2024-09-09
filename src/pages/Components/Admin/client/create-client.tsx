@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Tabs,  TabsContent, TabsList, TabsTrigger  } from '../../../components/ui/tabs';
-import { Button } from '../../../components/ui/button';
+import { Tabs,  TabsContent, TabsList, TabsTrigger  } from '../../../../components/ui/tabs';
+import { Button } from '../../../../components/ui/button';
 import { ClientForm } from './client-form';
 import { ArrowLeftCircleIcon } from 'lucide-react';
-import { DataTable } from '../Table/data-table';
-import { appointmentTableData as Data } from '../mock/dashboard-data';
+import { DataTable } from '../../Table/data-table';
+import { appointmentTableData as Data } from '../../mock/dashboard-data';
 
 import { 
   ColumnDef,

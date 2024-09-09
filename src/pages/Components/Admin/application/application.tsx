@@ -1,10 +1,10 @@
 import clsx from 'clsx'
 import { useEffect, useState, useMemo } from 'react'
-import { DataTable } from '../Table/data-table'
-import { Button } from '../../../components/ui/button'
-import { SearchIcon, FilterIcon, SortDesc, ArrowDown } from '../icons'
-import { Input } from '../../../components/ui/input'
-import { applicationData as Data } from '../mock/application-data'
+import { DataTable } from '../../Table/data-table'
+import { Button } from '../../../../components/ui/button'
+import { SearchIcon, FilterIcon, SortDesc, ArrowDown } from '../../icons'
+import { Input } from '../../../../components/ui/input'
+import { applicationData as Data } from '../../mock/application-data'
 
 import { 
   ColumnDef, 
@@ -18,6 +18,7 @@ import {
   VisibilityState,
   FilterFn,
 } from '@tanstack/react-table'
+import { ApplicationReview } from './application-review'
 
 // This type should match your data structure
 type Application = {
@@ -41,7 +42,7 @@ export const AdminApplication = ({ modalOpen, setModalOpen }) => {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState('')
-  const [selectedClient, setSelectedClient] = useState(null);
+  const [selectedApplication, setSelectedApplication] = useState(null);
 
   const columns: ColumnDef<Application>[] = [
     {
@@ -70,7 +71,7 @@ export const AdminApplication = ({ modalOpen, setModalOpen }) => {
       id: "actions",
       cell: ({ row }) => {
         return (
-          <Button variant="ghost" onClick={() => setSelectedClient(row.original)}>
+          <Button variant="ghost" onClick={() => setSelectedApplication(row.original)}>
             View
           </Button>
         )
@@ -78,7 +79,7 @@ export const AdminApplication = ({ modalOpen, setModalOpen }) => {
     },
   ]
   
-  console.log("Selected client: ", selectedClient)
+  console.log("Selected client: ", selectedApplication)
 
   useEffect(() => {
     // Fetch your data here
@@ -146,6 +147,9 @@ export const AdminApplication = ({ modalOpen, setModalOpen }) => {
   }, [table])
 
     return(
+      <>
+      {
+      selectedApplication === null ? (
       <div className='w-auto p-4 font-hubot space-y-6'>
       <header className=''>
           <h2 className='text-lg font-medium'>Applications</h2>
@@ -210,6 +214,10 @@ export const AdminApplication = ({ modalOpen, setModalOpen }) => {
         columns={columns}
         />
       </div>
-    </div>
+    </div>) : (
+      <ApplicationReview application={selectedApplication} onClose={() => setSelectedApplication(null)} />
+    )
+      }
+    </>
     )
   }

@@ -1,14 +1,14 @@
 import Sidebar from "./Components/sidebar";
 import { AdminDashboard } from "./Components/Admin/Dashboard";
-import { AdminApplication } from "./Components/Admin/application";
+import { AdminApplication } from "./Components/Admin/application/application";
 import { useState } from "react";
-import { AdminClient } from "./Components/Admin/client";
-import { AdminPayment } from "./Components/Admin/payment";
-import { AdminAppointment } from "./Components/Admin/appointment";
-import { AdminBlog } from "./Components/Admin/blog";
+import { AdminClient } from "./Components/Admin/client/client";
+import { AdminPayment } from "./Components/Admin/payment/payment";
+import { AdminAppointment } from "./Components/Admin/appointment/appointment";
+import { AdminBlog } from "./Components/Admin/blog/blog";
 import { AdminTestimonial } from "./Components/Admin/testimonial";
 import { AdminNewsletter } from "./Components/Admin/newsletter";
-import CreateNewClientMenu from "./Components/Admin/create-new-client";
+import CreateNewClientMenu from "./Components/Admin/client/create-new-client";
 
 const AdminApplications = () => {
 

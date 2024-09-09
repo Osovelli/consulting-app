@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { DashboardIcon, CalenderIcon, TimerIcon, WalletIcon, GroupIcon, FileIcon, MailSendIcon, StarIcon, LogoutIcon} from './icons';
 
@@ -6,7 +7,7 @@ const NavItem = ({ icon: Icon, label, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <li className="mb-2 relative hover:bg-[#F6F8FA] py-1 rounded-lg">
+    <li className="mb-2 relative hover:bg-[#F6F8FA] py-1 rounded-lg ">
       <a
         href="#"
         className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors duration-200"
@@ -38,12 +39,14 @@ const Sidebar = ({onItemClick}) => {
         <Menu className="w-6 h-6" />
       </button>*/}
       <div className={`fixed md:static inset-y-0 left-0 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 transition duration-200 ease-in-out md:w-64 bg-white min-h-dvh shadow-lg z-10`}>
-        <div className="p-4 border-b">
-          <img src="/logo-image.png" alt="D&E Business Consulting" className="mb-2 hidden md:block w-18 h-8" />
-        </div>
+        <Link  to={'/'} >
+          <div className="p-4 border-b ">
+            <img src="/logo-image.png" alt="D&E Business Consulting" className="mb-2 hidden md:block w-18 h-8" />
+          </div>
+        </Link>
         <nav className="p-4 space-y-5">
           <h2 className="text-xs font-medium text-[#868C98] hidden md:block">MAIN</h2>
-          <ul>
+          <ul className=''>
             <NavItem icon={DashboardIcon} label="Dashboard" onClick={onItemClick} />
             <NavItem icon={CalenderIcon} label="Clients" onClick={onItemClick}/>
             <NavItem icon={TimerIcon} label="Applications" onClick={onItemClick}/>
@@ -61,8 +64,10 @@ const Sidebar = ({onItemClick}) => {
                 <div>
                     <p className="font-semibold text-sm">Current User</p>
                     <p className="text-xs text-gray-600">currentuser@company...</p>
-                </div>              
-              <LogoutIcon />
+                </div>
+                <Link to={'/login'}>
+                  <LogoutIcon />
+                </Link>              
             </div>
           </div>
         </div>

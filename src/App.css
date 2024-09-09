@@ -46,3 +46,13 @@ body{
 .read-the-docs {
   color: #888;
 }
+
+/* Hide the calendar icon on WebKit-based browsers */
+.no-icon::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+/* Hide the calendar icon on Firefox */
+.no-icon {
+  -moz-appearance: textfield;
+}
