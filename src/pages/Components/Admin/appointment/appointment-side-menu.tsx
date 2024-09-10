@@ -17,7 +17,7 @@ export function AppointmentSideMenu({ isOpen, onClose, appointmentData, content 
             <AppointmentForm onClose={onClose} appointmentData={appointmentData} />
           ) : (
             <AppointmentDetails data={appointmentData} />
-          )}
+          )} 
       </SheetContent>
     </Sheet>
   )
