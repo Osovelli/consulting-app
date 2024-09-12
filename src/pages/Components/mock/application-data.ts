@@ -3,7 +3,7 @@ export const applicationData = [
       applicationId: "#1234567890",
       clientName: "Tesla Inc",
       serviceType: ["Financial analysis", "Business formation"],
-      status: "Pending",
+      status: "Pending lum",
       date: "July 15, 2023",
     },
     {
