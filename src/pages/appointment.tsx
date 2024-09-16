@@ -3,13 +3,35 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import AppLayout from "./Components/appLayout";
-import { DataTable, } from "./Components/table";
+//import { DataTable, } from "./Components/table";
+import { DataTable } from "./Components/Table/data-table";
 import ScheduleAppointment from "./Components/schedule_appointment";
-import { useDispatch } from 'react-redux';
-import { useSelector } from "react-redux";
-import { selectApplicationData } from "./Components/applicationData";
-import { resetApplication } from "../store/progressSlice";
 import Modal from "./Components/modal";
+import { appointmentData as Data } from "./Components/mock/appointment-data";
+
+import { 
+    ColumnDef, 
+    useReactTable, 
+    getCoreRowModel, 
+    getFilteredRowModel, 
+    getPaginationRowModel, 
+    getSortedRowModel,
+    ColumnFiltersState,
+    SortingState,
+    VisibilityState,
+    FilterFn,
+  } from '@tanstack/react-table'
+import { ActionIcon } from "./Components/icons";
+
+  // This type should match your data structure
+type Application = {
+    appointmentId: string
+    companyName: string
+    services: string[]
+    status: string
+    time: string
+    date: string
+  }
 
 export default function Appointment() {
     const [isSchedulesOpen, setIsScheduleOpen] = useState(false);
@@ -17,13 +39,8 @@ export default function Appointment() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     //const [applicationData, setApplicationData] = useState<ServiceCol[]>([]);
     const location = useLocation();
-    const applicationData = useSelector(selectApplicationData)
-    console.log(applicationData)
-    
 
-    console.log("applicationData: ", applicationData)
-
-    const dispatch = useDispatch();
+    console.log("applicationData: ", Data)
 
     /*const handleNewApplication = () => {
         dispatch(createNewApplication());
@@ -33,10 +50,89 @@ export default function Appointment() {
 
     const appointmentStatus = ['Confirmed', 'Completed', 'Cancelled']
 
-    const handleNewApplication = () => {
-        dispatch(resetApplication());
-        // Any other logic needed for starting a new application
-      };
+    const columns: ColumnDef<Application>[] = [
+        {
+          accessorKey: "appointmentId",
+          header: "Application ID",
+        },
+        {
+          accessorKey: "companyName",
+          header: "Company Name",
+        },
+        {
+          accessorKey: "services",
+          header: "Services",
+          cell: ({ getValue }) => {
+            const services = getValue() as string[];
+            const displayedServices = services.slice(0, 2);
+            const remainingCount = Math.max(0, services.length - 2);
+            return (
+              <div className="flex flex-wrap gap-1">
+                {displayedServices.map((service, index) => (
+                  <Badge
+                    key={index}
+                    className={cn(
+                      "text-xs text-[#6E330C] hover:bg-[`${[serviceColors[service]}`]", [serviceColors[service]]
+                    )}
+                  >
+                    {service}
+                  </Badge>
+                ))}
+                {remainingCount > 0 && <span className="bg-[#F6F8FA] rounded-full  px-2 flex items-center">{remainingCount}+</span>}
+              </div>
+            );
+          },
+        },
+        {
+          accessorKey: "time",
+          header: "Time",
+        },
+        {
+          accessorKey: "date",
+          header: "Date",
+        },
+        {
+          accessorKey: "status",
+          header: "Status",
+          cell: ({getValue}) => {
+            const status = getValue() as String;
+            return(
+              <span className='flex gap-1 item-center justify-center text-xs font-medium border border-[#E2E4E9] py-1 rounded-md'>
+              {
+                status === 'Completed' ? (
+                  <ActionIcon />  
+                ) : status === 'Upcoming' ? (
+                  < />
+                ) : status === 'Cancelled' ? (
+                  <InactiveIcon />
+                ) : (
+                  <NewIcon />
+                )
+              }
+              {status}
+            </span>
+            )
+            
+          }
+        },
+        {
+          header: "actions",
+          id: "actions",
+          cell: ({ row }) => {
+            return (
+              <span className='flex gap-2 items-center'  onClick={() => {
+                setSelectedAppointment(row.original)
+                setSideMenuContent('detail')
+                setSideMenuOpen(true)
+              }}>
+                <EyeLineIcon />
+                View
+              </span>
+            )
+          }
+          ,
+        },
+      ]
 
      // Check if we should open the details panel based on the location state
      useEffect(() => {
@@ -50,6 +146,30 @@ export default function Appointment() {
         setSelectedApplication(applicationData);
         setIsScheduleOpen(true);
     };
+    const table = useReactTable({
+        data,
+        columns,
+        state: {
+          sorting,
+          columnFilters,
+          columnVisibility,
+          rowSelection,
+        },
+        enableRowSelection: true,
+        onSortingChange: setSorting,
+        onColumnFiltersChange: setColumnFilters,
+        onColumnVisibilityChange: setColumnVisibility,
+        onRowSelectionChange: setRowSelection,
+        //onGlobalFilterChange: setGlobalFilter,
+        getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        filterFns: {
+          filterByTabAndTime
+        },
+        //globalFilterFn: hasTimeValue,
+      })
 
     return(
         <AppLayout>
@@ -69,7 +189,8 @@ export default function Appointment() {
                             </Link>
                         </button>
                     </div>
-                    <DataTable onRowClick={handleScheduleOpen} applicationData={applicationData} tableStatus={appointmentStatus} showDocumentsColumn={false} />
+                    {/*<DataTable onRowClick={handleScheduleOpen} applicationData={Data} tableStatus={appointmentStatus} showDocumentsColumn={false} />*/}
+                    <DataTable table={} columns={}  />
                 </div>
                 {isModalOpen && 
                 <Modal>
@@ -77,7 +198,7 @@ export default function Appointment() {
             </div>
             {isSchedulesOpen  && 
             <div className=" absolute inset-0 bg-black bg-opacity-50  items-center justify-center z-50 flex">
-                <ScheduleAppointment isOpen={handleScheduleOpen} applicationData={applicationData} onClose={() => setIsScheduleOpen(false)} />
+                <ScheduleAppointment isOpen={handleScheduleOpen} applicationData={Data} onClose={() => setIsScheduleOpen(false)} />
             </div>}
         </AppLayout>
     )

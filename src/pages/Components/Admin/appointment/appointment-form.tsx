@@ -49,7 +49,7 @@ export function AppointmentForm({onClose, appointmentData}) {
         <div>
           <h3 className="text-sm font-medium text-gray-500 mb-2">SELECT CLIENT</h3>
           <div className="flex">
-            <Input {...register('clientName')}  placeholder="Search client's name" className="rounded-r-none" />
+            <Input {...register('clientName')}  placeholder="Search client's name" className="rounded-r-none " />
             <Button type="button" className="rounded-l-none bg-lime-400 hover:bg-lime-500 text-black">
               <Search className="h-4 w-4" />
             </Button>

@@ -37,11 +37,11 @@ export function ConfirmAppointmentModal({
             Are you sure you want to schedule an appointment with {clientName} at {date} and {time}?
           </p>
         </div>
-        <div className="mt-6 flex justify-end space-x-2">
-          <Button variant="outline" onClick={onClose}>
+        <div className="mt-6 w-full flex space-x-2">
+          <Button className='flex-1' variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button className="bg-[#C1FA6B] text-black hover:bg-[#A8E05A]" onClick={onConfirm}>
+          <Button className="flex-1 bg-[#C1FA6B] text-black hover:bg-[#A8E05A]" onClick={onConfirm}>
             Schedule Appointment
           </Button>
         </div>

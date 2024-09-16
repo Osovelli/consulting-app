@@ -128,7 +128,7 @@ export default function BlogEditor({onClose}) {
     <div className="w-full sm:max-w-6xl mx-auto px-8 py-12">
       <div className="flex justify-between items-center -mx-8 sm:-mx-0 mb-6">
         <div className="flex items-center">
-          <Button variant="ghost" size="icon" className="mr-2">
+          <Button variant="ghost" size="icon" className="mr-2" onClick={onClose}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <h1 className="text-xl font-semibold">Create new blog post</h1>

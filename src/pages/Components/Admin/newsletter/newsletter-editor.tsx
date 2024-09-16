@@ -2,13 +2,14 @@ import { useState, useRef } from 'react'
 import { Button } from '../../../../components/ui/button'
 import { Input } from "../../../../components/ui/input"
 import { Card, CardContent } from "../../../../components/ui/card"
-import { ArrowLeft, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Link, Plus, Undo, Redo, MoreHorizontal } from 'lucide-react'
+import { ArrowLeft, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Link, Plus, Undo, Redo, MoreHorizontal, SaveIcon } from 'lucide-react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { NewsletterPreview } from './newsletter-preview'
 
-import FileUploadCard from '../fileupload-card'
-import { Progress } from '../../../../components/ui/progress'
+//import FileUploadCard from '../fileupload-card'
+//import { Progress } from '../../../../components/ui/progress'
+import { DeleteLineIcon, SaveLineIcon,  SendPlaneLineIcon } from '../../icons'
 
 const modules = {
   toolbar: [
@@ -62,7 +63,7 @@ export function NewsletterEditor({onClose}) {
   return (
     <div className="max-w-7xl mx-auto p-4 bg-[#F6F8FA] min-h-dvh font-hubot">
       <div className="flex items-center mb-4 bg-white -mx-4 px-4">
-        <ArrowLeft className="w-4 h-4 mr-2" />
+        <ArrowLeft className="w-4 h-4 mr-2" onClick={onClose} />
         <h1 className="text-lg font-medium">Create newsletter</h1>
       </div>
       <Card>
@@ -71,21 +72,32 @@ export function NewsletterEditor({onClose}) {
             placeholder="Subject"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            className="mb-1 max-w-5xl"
+            className="mb-1"
           />
           <ReactQuill 
           value={content} 
           onChange={setContent}
           modules={modules}
           formats={formats}
-          className="mb-20 p-8 h-80 "
+          className="mb-20 h-80 "
         />
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between space-x-4">
             <Button variant="outline"><Link className="h-4 w-4 mr-2" />Attach files</Button>
-            <Button variant="destructive">Delete</Button>
-            <Button variant="outline">Schedule for later</Button>
-            <Button variant="outline">Save as draft</Button>
-            <Button onClick={handleSend}>Send</Button>
+            <div className='space-x-2'>
+            <Button variant={'destructive'} className='border-[#FF0000] hover:text-white border text-[#FF0000] gap-1 bg-white'>
+              <DeleteLineIcon />
+              Delete
+            </Button>
+            <Button variant="outline" className='border-0'>Schedule for later</Button>
+            <Button className='gap-1' variant="outline">
+              <SaveLineIcon />
+              Save as draft
+            </Button>
+            <Button className='gap-1 bg-[#C1FA6B] text-black hover:bg-[#d8eca0]' onClick={handleSend}>
+              <SendPlaneLineIcon />
+              Send
+            </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

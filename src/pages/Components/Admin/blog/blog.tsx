@@ -121,11 +121,8 @@ export const AdminBlog = () => {
       id: "actions",
       cell: ({ row }) => {
         return (
-          <span onClick={() => {
-            setSelectedAppointment(row.original)
-            setSideMenuContent('detail')
-            setSideMenuOpen(true)
-          }} className='flex gap-2'>
+          <span onClick={() => console.log(row.original)}
+            className='flex gap-2'>
             <EyeLineIcon />
             View
           </span>

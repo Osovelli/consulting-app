@@ -3,7 +3,7 @@ import { DataTable } from '../../Table/data-table'
 //import { ColumnDef } from '@tanstack/react-table'
 import { Button } from '../../../../components/ui/button'
 import { financialTableData as Data } from '../../mock/payment-data'
-import { SearchIcon, FilterIcon, SortDesc, ArrowDown } from '../../icons'
+import { SearchIcon, FilterIcon, SortDesc, ArrowDown, EyeLineIcon } from '../../icons'
 import { Input } from '../../../../components/ui/input'
 import { PaymentSideMenu } from './payment-side-menu'
 
@@ -19,6 +19,8 @@ import {
   VisibilityState,
   FilterFn,
 } from '@tanstack/react-table'
+import { Badge } from '../../../../components/ui/badge'
+import { cn } from '../../../../lib/utils'
 
 // This type should match your data structure
 type Application = {
@@ -51,6 +53,14 @@ export const AdminPayment = () => {
     {
       accessorKey: "type",
       header: "Payment Type",
+      cell: ({getValue}) => {
+        const status = getValue() as string
+        return(
+          <Badge className={cn('text-xs', status === 'Appointment' ? 'bg-[#35B9E9]' : 'bg-[#1C7F4E]')}>
+            {status}
+          </Badge>
+        )
+      }
     },
     {
       accessorKey: "amount",
@@ -66,12 +76,13 @@ export const AdminPayment = () => {
       id: "actions",
       cell: ({ row }) => {
         return (
-          <Button variant="ghost" onClick={() => {
+          <span className='flex items-center gap-2' onClick={() => {
             setSelectedPayment(row.original)
             setSideMenuOpen(true)
           }}>
+            <EyeLineIcon />
             View
-          </Button>
+          </span>
         )
       },
     },

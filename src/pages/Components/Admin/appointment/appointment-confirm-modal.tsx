@@ -14,7 +14,7 @@ export function ConfirmAppointmentModal({ isOpen, onClose, onConfirm, clientName
             {clientName} has requested an appointment on {date} at {time}. Confirm to accept and schedule the appointment.
           </p>
         </div>
-        <div className="mt-6 flex justify-center space-x-4">
+        <div className="mt-6 flex w-full justify-center space-x-4">
           <Button variant="outline" onClick={onClose}>
             Decline Appointment
           </Button>
