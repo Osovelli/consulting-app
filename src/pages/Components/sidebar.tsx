@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'lucide-react';
-import { DashboardIcon, CalenderIcon, TimerIcon, WalletIcon, GroupIcon, FileIcon, MailSendIcon, StarIcon, LogoutIcon} from './icons';
+import { DashboardIcon, CalenderIcon, TimerIcon, WalletIcon, GroupIcon, FileIcon, MailSendIcon, StarIcon, LogoutIcon, SuitcaseLineIcon} from './icons';
 
-const NavItem = ({ icon: Icon, label, onClick }) => {
+const NavItem = ({ icon: Icon, label, routeName }: {icon: any, label: string, routeName: string}) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <li className="mb-2 relative hover:bg-[#F6F8FA] py-1 rounded-lg ">
-      <a
-        href="#"
+      <Link
+        to={`/${routeName}`}
         className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors duration-200"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        onClick={() => onClick(label.toLowerCase())}
+        
       >
         <Icon className="w-5 h-5 mr-2" />
         <span className="hidden md:inline">{label}</span>
-      </a>
+      </Link>
       {isHovered && (
         <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-xs rounded md:hidden">
           {label}
@@ -27,7 +27,7 @@ const NavItem = ({ icon: Icon, label, onClick }) => {
   );
 };
 
-const Sidebar = ({onItemClick}) => {
+const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -47,14 +47,15 @@ const Sidebar = ({onItemClick}) => {
         <nav className="p-4 space-y-5">
           <h2 className="text-xs font-medium text-[#868C98] hidden md:block">MAIN</h2>
           <ul className=''>
-            <NavItem icon={DashboardIcon} label="Dashboard" onClick={onItemClick} />
-            <NavItem icon={CalenderIcon} label="Clients" onClick={onItemClick}/>
-            <NavItem icon={TimerIcon} label="Applications" onClick={onItemClick}/>
-            <NavItem icon={WalletIcon} label="Payments" onClick={onItemClick}/>
-            <NavItem icon={GroupIcon} label="Appointments" onClick={onItemClick} />
-            <NavItem icon={FileIcon} label="Blog" onClick={onItemClick} />
-            <NavItem icon={MailSendIcon} label="Newsletter" onClick={onItemClick} />
-            <NavItem icon={StarIcon} label="Testimonials" onClick={onItemClick} />
+            <NavItem icon={DashboardIcon} label="Dashboard" routeName={''}  />
+            <NavItem icon={CalenderIcon} label="Clients" routeName={'client'} />
+            <NavItem icon={TimerIcon} label="Applications" routeName={'application'} />
+            <NavItem icon={WalletIcon} label="Payments" routeName={'payment'} />
+            <NavItem icon={GroupIcon} label="Appointments" routeName={'appointment'} />
+            <NavItem icon={FileIcon} label="Blog" routeName={'blog'}  />
+            <NavItem icon={MailSendIcon} label="Newsletter" routeName={'newsletter'} />
+            <NavItem icon={StarIcon} label="Testimonials" routeName={'testimonial'} />
+            <NavItem icon={SuitcaseLineIcon} label="Services" routeName={'service'} />
           </ul>
         </nav>
         <div className="absolute bottom-0 w-full p-4 border-t hidden md:block">
