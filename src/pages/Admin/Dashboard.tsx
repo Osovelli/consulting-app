@@ -18,8 +18,14 @@ import {
   VisibilityState,
   FilterFn,
 } from '@tanstack/react-table'
+<<<<<<< HEAD:src/pages/Admin/Dashboard.tsx
 import { cn } from '../../lib/utils'
 import { Badge } from '../../components/ui/badge'
+=======
+
+import { cn } from '../../../lib/utils'
+import { Badge } from '../../../components/ui/badge'
+>>>>>>> 89b62c0236ef745e0252f38f35eeaba26d610da7:src/pages/Components/Admin/Dashboard.tsx
 
 // This type should match your data structure
 type Application = {

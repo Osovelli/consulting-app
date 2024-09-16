@@ -1,7 +1,13 @@
 import { useState, useRef } from 'react'
+<<<<<<< HEAD:src/pages/Admin/newsletter/newsletter-editor.tsx
 import { Button } from '../../../components/ui/button'
 import { Input } from "../../../components/ui/input"
 import { Card, CardContent } from "../../../components/ui/card"
+=======
+import { Button } from '../../../../components/ui/button'
+import { Input } from "../../../../components/ui/input"
+import { Card, CardContent } from "../../../../components/ui/card"
+>>>>>>> 89b62c0236ef745e0252f38f35eeaba26d610da7:src/pages/Components/Admin/newsletter/newsletter-editor.tsx
 import { ArrowLeft, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Link, Plus, Undo, Redo, MoreHorizontal, SaveIcon } from 'lucide-react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
@@ -9,7 +15,11 @@ import { NewsletterPreview } from './newsletter-preview'
 
 //import FileUploadCard from '../fileupload-card'
 //import { Progress } from '../../../../components/ui/progress'
+<<<<<<< HEAD:src/pages/Admin/newsletter/newsletter-editor.tsx
 import { DeleteLineIcon, SaveLineIcon,  SendPlaneLineIcon } from '../../Components/icons'
+=======
+import { DeleteLineIcon, SaveLineIcon,  SendPlaneLineIcon } from '../../icons'
+>>>>>>> 89b62c0236ef745e0252f38f35eeaba26d610da7:src/pages/Components/Admin/newsletter/newsletter-editor.tsx
 
 const modules = {
   toolbar: [

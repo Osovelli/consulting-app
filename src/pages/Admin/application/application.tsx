@@ -1,13 +1,11 @@
 import clsx from 'clsx'
 import { useEffect, useState, useMemo } from 'react'
-import { DataTable } from '../../Components/Table/data-table'
-import { Button } from '../../../components/ui/button'
-import { SearchIcon, FilterIcon, SortDesc, ArrowDown, EyeLineIcon } from '../../Components/icons'
-import { Input } from '../../../components/ui/input'
-import { Badge } from '../../../components/ui/badge'
-import { applicationData as Data } from '../../Components/mock/application-data'
-
-import { useNavigate } from 'react-router-dom'
+import { DataTable } from '../../Table/data-table'
+import { Button } from '../../../../components/ui/button'
+import { SearchIcon, FilterIcon, SortDesc, ArrowDown, EyeLineIcon } from '../../icons'
+import { Input } from '../../../../components/ui/input'
+import { Badge } from '../../../../components/ui/badge'
+import { applicationData as Data } from '../../mock/application-data'
 
 import { 
   ColumnDef, 
@@ -22,7 +20,11 @@ import {
   FilterFn,
 } from '@tanstack/react-table'
 import { ApplicationReview } from './application-review'
+<<<<<<< HEAD:src/pages/Admin/application/application.tsx
 import { cn } from '../../../lib/utils'
+=======
+import { cn } from '../../../../lib/utils'
+>>>>>>> 89b62c0236ef745e0252f38f35eeaba26d610da7:src/pages/Components/Admin/application/application.tsx
 
 // This type should match your data structure
 type Application = {
@@ -129,7 +131,11 @@ export const AdminApplication = ({ modalOpen, setModalOpen }) => {
           navigate('/application/create-application')
         }
         return (
+<<<<<<< HEAD:src/pages/Admin/application/application.tsx
           <span className='flex gap-2 items-center' onClick={handleviewApplication}>
+=======
+          <span className='flex gap-2 items-center' onClick={() => setSelectedApplication(row.original)}>
+>>>>>>> 89b62c0236ef745e0252f38f35eeaba26d610da7:src/pages/Components/Admin/application/application.tsx
             <EyeLineIcon />
             View
           </span>

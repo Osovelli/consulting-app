@@ -1,9 +1,15 @@
 import clsx from 'clsx'
 import { useEffect, useState, useMemo } from 'react'
 import { X } from 'lucide-react'
+<<<<<<< HEAD:src/pages/Admin/appointment/appointment.tsx
 import { DataTable } from '../../Components/Table/data-table'
 import { Button } from '../../../components/ui/button'
 import { SearchIcon, FilterIcon, SortDesc, ArrowDown, EyeLineIcon,} from '../../Components/icons'
+=======
+import { DataTable } from '../../Table/data-table'
+import { Button } from '../../../../components/ui/button'
+import { SearchIcon, FilterIcon, SortDesc, ArrowDown, EyeLineIcon,} from '../../icons'
+>>>>>>> 89b62c0236ef745e0252f38f35eeaba26d610da7:src/pages/Components/Admin/appointment/appointment.tsx
 import { PlusIcon } from 'lucide-react'
 import { Input } from '../../../components/ui/input'
 import { appointmentData as Data } from '../../Components/mock/appointment-data'
@@ -20,9 +26,15 @@ import {
   VisibilityState,
   FilterFn,
 } from '@tanstack/react-table'
+
 import { AppointmentSideMenu } from './appointment-side-menu'
+<<<<<<< HEAD:src/pages/Admin/appointment/appointment.tsx
 import { Badge } from '../../../components/ui/badge'
 import { cn } from '../../../lib/utils'
+=======
+import { Badge } from '../../../../components/ui/badge'
+import { cn } from '../../../../lib/utils'
+>>>>>>> 89b62c0236ef745e0252f38f35eeaba26d610da7:src/pages/Components/Admin/appointment/appointment.tsx
 //import { ApplicationReview } from './application-review'
 
 // This type should match your data structure

@@ -1,10 +1,17 @@
 import { useEffect, useState, useMemo } from 'react'
 import { DataTable } from '../../Components/Table/data-table'
 //import { ColumnDef } from '@tanstack/react-table'
+<<<<<<< HEAD:src/pages/Admin/payment/payment.tsx
 import { Button } from '../../../components/ui/button'
 import { financialTableData as Data } from '../../Components/mock/payment-data'
 import { SearchIcon, FilterIcon, SortDesc, ArrowDown, EyeLineIcon } from '../../Components/icons'
 import { Input } from '../../../components/ui/input'
+=======
+import { Button } from '../../../../components/ui/button'
+import { financialTableData as Data } from '../../mock/payment-data'
+import { SearchIcon, FilterIcon, SortDesc, ArrowDown, EyeLineIcon } from '../../icons'
+import { Input } from '../../../../components/ui/input'
+>>>>>>> 89b62c0236ef745e0252f38f35eeaba26d610da7:src/pages/Components/Admin/payment/payment.tsx
 import { PaymentSideMenu } from './payment-side-menu'
 
 import { 
@@ -19,8 +26,13 @@ import {
   VisibilityState,
   FilterFn,
 } from '@tanstack/react-table'
+<<<<<<< HEAD:src/pages/Admin/payment/payment.tsx
 import { Badge } from '../../../components/ui/badge'
 import { cn } from '../../../lib/utils'
+=======
+import { Badge } from '../../../../components/ui/badge'
+import { cn } from '../../../../lib/utils'
+>>>>>>> 89b62c0236ef745e0252f38f35eeaba26d610da7:src/pages/Components/Admin/payment/payment.tsx
 
 // This type should match your data structure
 type Application = {
